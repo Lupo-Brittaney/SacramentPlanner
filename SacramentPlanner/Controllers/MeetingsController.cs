@@ -19,9 +19,28 @@ namespace SacramentPlanner.Controllers
         }
 
         // GET: Meetings
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder)
         {
-            return View(await _context.Meeting.ToListAsync());
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+            var meetings = from m in _context.Meeting
+                           select m;
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    meetings = meetings.OrderByDescending(m => m.Conduct);
+                    break;
+                case "Date":
+                    meetings = meetings.OrderBy(m => m.Date);
+                    break;
+                case "date_desc":
+                    meetings = meetings.OrderByDescending(m => m.Date);
+                    break;
+                default:
+                    meetings = meetings.OrderBy(m => m.Conduct);
+                    break;
+            }
+            return View(await meetings.AsNoTracking().ToListAsync());
         }
 
         // GET: Meetings/Details/5
@@ -53,15 +72,25 @@ namespace SacramentPlanner.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Date,Conduct,OpenSong,OpenSongNum,SacSong,SacSongNum,CloseSong,CloseSongNum,YouthSpeaker,YouthTopic,SecondSpeaker,SecondTopic,ThirdSpeaker,ThirdTopic,OpenPrayer,ClosePrayer")] Meeting meeting)
+        public async Task<IActionResult> Create([Bind("Date,Conduct,OpenSong,OpenSongNum,SacSong,SacSongNum,CloseSong,CloseSongNum,YouthSpeaker,YouthTopic,SecondSpeaker,SecondTopic,ThirdSpeaker,ThirdTopic,OpenPrayer,ClosePrayer")] Meeting meeting)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(meeting);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    _context.Add(meeting);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
             }
-            return View(meeting);
+            catch (DbUpdateException /* ex */)
+            {
+                //Log the error (uncomment ex variable name and write a log.
+                ModelState.AddModelError("", "Unable to save changes. " +
+                    "Try again, and if the problem persists " +
+                    "see your system administrator.");
+            }
+                return View(meeting);
         }
 
         // GET: Meetings/Edit/5
@@ -98,25 +127,30 @@ namespace SacramentPlanner.Controllers
                 {
                     _context.Update(meeting);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!MeetingExists(meeting.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    //   if (!MeetingExists(meeting.ID))
+                    //   {
+                    //       return NotFound();
+                    //   }
+                    //   else
+                    //   {
+                    //       throw;
+                    //   }
+                    //Log the error (uncomment ex variable name and write a log.)
+                    ModelState.AddModelError("", "Unable to save changes. " +
+                        "Try again, and if the problem persists, " +
+                        "see your system administrator.");
                 }
-                return RedirectToAction(nameof(Index));
+                //return RedirectToAction(nameof(Index));
             }
             return View(meeting);
         }
 
         // GET: Meetings/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id, bool? saveChangesError = false)
         {
             if (id == null)
             {
@@ -124,10 +158,17 @@ namespace SacramentPlanner.Controllers
             }
 
             var meeting = await _context.Meeting
+                .AsNoTracking()
                 .SingleOrDefaultAsync(m => m.ID == id);
             if (meeting == null)
             {
                 return NotFound();
+            }
+            if (saveChangesError.GetValueOrDefault())
+            {
+                ViewData["ErrorMessage"] =
+                    "Delete failed. Try again, and if the problem persists " +
+                    "see your system administrator.";
             }
 
             return View(meeting);
@@ -138,10 +179,27 @@ namespace SacramentPlanner.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var meeting = await _context.Meeting.SingleOrDefaultAsync(m => m.ID == id);
-            _context.Meeting.Remove(meeting);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            var meeting = await _context.Meeting
+                .AsNoTracking()
+                .SingleOrDefaultAsync(m => m.ID == id);
+            if (meeting == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            try
+            {
+                _context.Meeting.Remove(meeting);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException /* ex */)
+            {
+                //Log the error (uncomment ex variable name and write a log.)
+                return RedirectToAction(nameof(Delete), new { id = id, saveChangesError = true });
+            }
+
+
         }
 
         private bool MeetingExists(int id)

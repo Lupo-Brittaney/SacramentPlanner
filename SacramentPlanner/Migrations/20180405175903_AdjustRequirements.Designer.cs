@@ -11,9 +11,10 @@ using System;
 namespace SacramentPlanner.Migrations
 {
     [DbContext(typeof(SacramentPlannerContext))]
-    partial class SacramentPlannerContextModelSnapshot : ModelSnapshot
+    [Migration("20180405175903_AdjustRequirements")]
+    partial class AdjustRequirements
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,33 +27,29 @@ namespace SacramentPlanner.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("ClosePrayer")
-                        .IsRequired()
                         .HasMaxLength(50);
 
                     b.Property<string>("CloseSong")
-                        .IsRequired()
                         .HasMaxLength(50);
 
                     b.Property<int>("CloseSongNum");
 
                     b.Property<string>("Conduct")
-                        .IsRequired()
                         .HasMaxLength(50);
 
                     b.Property<DateTime>("Date");
 
+                    b.Property<DateTime>("EnrollmentDate");
+
                     b.Property<string>("OpenPrayer")
-                        .IsRequired()
                         .HasMaxLength(50);
 
                     b.Property<string>("OpenSong")
-                        .IsRequired()
                         .HasMaxLength(50);
 
                     b.Property<int>("OpenSongNum");
 
                     b.Property<string>("SacSong")
-                        .IsRequired()
                         .HasMaxLength(50);
 
                     b.Property<int>("SacSongNum");

@@ -11,9 +11,10 @@ using System;
 namespace SacramentPlanner.Migrations
 {
     [DbContext(typeof(SacramentPlannerContext))]
-    partial class SacramentPlannerContextModelSnapshot : ModelSnapshot
+    [Migration("20180405180923_RequiredFields")]
+    partial class RequiredFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
