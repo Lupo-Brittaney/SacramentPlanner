@@ -61,11 +61,11 @@ namespace SacramentPlanner.Models
         public string YouthTopic { get; set; }
 
         [RegularExpression(@"^[a-zA-Z""'\s-]*$")]
-        [Display(Name = "Second SPeaker")]
+        [Display(Name = "Second Speaker")]
         public string SecondSpeaker { get; set; }
 
         [RegularExpression(@"^[a-zA-Z""'\s-]*$")]
-        [Display(Name = "Second SPeaker Topic")]
+        [Display(Name = "Second Speaker Topic")]
         public string SecondTopic { get; set; }
 
         [RegularExpression(@"^[a-zA-Z""'\s-]*$")]
