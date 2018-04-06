@@ -13,7 +13,7 @@ namespace SacramentPlanner.Models
 
         
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:MMM d, yyyy}", ApplyFormatInEditMode = true)]
         public DateTime Date { get; set; }
 
         [Required]
@@ -61,11 +61,11 @@ namespace SacramentPlanner.Models
         public string YouthTopic { get; set; }
 
         [RegularExpression(@"^[a-zA-Z""'\s-]*$")]
-        [Display(Name = "Second SPeaker")]
+        [Display(Name = "Second Speaker")]
         public string SecondSpeaker { get; set; }
 
         [RegularExpression(@"^[a-zA-Z""'\s-]*$")]
-        [Display(Name = "Second SPeaker Topic")]
+        [Display(Name = "Second Speaker Topic")]
         public string SecondTopic { get; set; }
 
         [RegularExpression(@"^[a-zA-Z""'\s-]*$")]
