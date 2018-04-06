@@ -13,7 +13,7 @@ namespace SacramentPlanner.Models
 
         
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:MMM d, yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:MMM d, yyyy}", ApplyFormatInEditMode = false)]
         public DateTime Date { get; set; }
 
         [Required]
