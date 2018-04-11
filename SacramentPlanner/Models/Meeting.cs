@@ -24,7 +24,6 @@ namespace SacramentPlanner.Models
 
         [Required]
         [StringLength(50)]
-        [RegularExpression(@"^[a-zA-Z""'\s-]*$")]
         [Display(Name = "Opening Song")]
         public string OpenSong { get; set; }
 
@@ -34,7 +33,6 @@ namespace SacramentPlanner.Models
 
         [Required]
         [StringLength(50)]
-        [RegularExpression(@"^[a-zA-Z""'\s-]*$")]
         [Display(Name = "Sacrament Song")]
         public string SacSong { get; set; }
 
@@ -44,7 +42,6 @@ namespace SacramentPlanner.Models
 
         [Required]
         [StringLength(50)]
-        [RegularExpression(@"^[a-zA-Z""'\s-]*$")]
         [Display(Name = "Closing Song")]
         public string CloseSong { get; set; }
 

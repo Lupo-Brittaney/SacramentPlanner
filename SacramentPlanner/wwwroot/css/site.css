@@ -33,3 +33,15 @@
         display: none;
     }
 }
+
+
+.navbar-inverse {
+    background-color: #424f5b;
+}
+
+a {
+    color: #424f5b;
+}
+h2 {
+    color: #251204;
+}
