@@ -21,8 +21,8 @@ namespace SacramentPlanner.Controllers
         // GET: Meetings
         public async Task<IActionResult> Index(string sortOrder)
         {
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewData["NameSortParm"] = sortOrder == "Name" ? "name_desc" : "Name";
+            ViewData["DateSortParm"] = String.IsNullOrEmpty(sortOrder) ? "date_desc" : "Date";
             var meetings = from m in _context.Meeting
                            select m;
             switch (sortOrder)
@@ -30,14 +30,14 @@ namespace SacramentPlanner.Controllers
                 case "name_desc":
                     meetings = meetings.OrderByDescending(m => m.Conduct);
                     break;
-                case "Date":
-                    meetings = meetings.OrderBy(m => m.Date);
+                case "Name":
+                    meetings = meetings.OrderBy(m => m.Conduct);
                     break;
                 case "date_desc":
                     meetings = meetings.OrderByDescending(m => m.Date);
                     break;
                 default:
-                    meetings = meetings.OrderBy(m => m.Conduct);
+                    meetings = meetings.OrderBy(m => m.Date);
                     break;
             }
             return View(await meetings.AsNoTracking().ToListAsync());
